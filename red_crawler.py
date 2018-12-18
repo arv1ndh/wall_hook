@@ -24,7 +24,7 @@ class RedditEpParser(HTMLParser):
                 if not len(self.link):
                     self.link = attrs[0][1]
 
-def main():
+def red_crawler():
     red_url = "https://www.reddit.com"
     categ = "/r/EarthPorn"
 
@@ -42,7 +42,6 @@ def main():
     print("Trying to fetch ", img_url)
     url_obj = urlopen(Request(img_url, headers = custom_header))
     html_page = str(url_obj.read())
-    print(html_page)
 
     red_parser_obj.feed(html_page)
     img_link = red_parser_obj.link
@@ -54,5 +53,5 @@ def main():
     print("Image Downloaded successfully")
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
