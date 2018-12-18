@@ -1,7 +1,9 @@
 from html.parser import HTMLParser
 from datetime import datetime
-from urllib.request import urlopen
+from urllib.request import urlopen,Request
 import os
+
+custom_header = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"}
 
 class RedditEpParser(HTMLParser):
     def __init__(self):
@@ -23,36 +25,33 @@ class RedditEpParser(HTMLParser):
                     self.link = attrs[0][1]
 
 def main():
-    red_url = "https://www.reddit.com/"
-    categ = "r/EarthPorn"
+    red_url = "https://www.reddit.com"
+    categ = "/r/EarthPorn"
 
-    if os.path.isfile("red_page"):
-        with open("red_page", "r") as html_file:
-            html_page = html_file.read()
-    else:
-        url_obj = urlopen(red_url+categ)
-        html_page = str(url_obj.read())
-
-    with open("red_page", "w") as html_file:
-        html_file.write(html_page)
+    print("Trying to fetch ", red_url+categ)
+    url_obj = urlopen(Request(red_url+categ, headers=custom_header))
+    html_page = str(url_obj.read())
 
     red_parser_obj = RedditEpParser()
     red_parser_obj.feed(html_page)
     post_link = red_parser_obj.link
+    print("Obtained the post link ", post_link)
 
     red_parser_obj = RedditEpParser()
     img_url = red_url + post_link
     print("Trying to fetch ", img_url)
-    url_obj = urlopen(img_url)
+    url_obj = urlopen(Request(img_url, headers = custom_header))
     html_page = str(url_obj.read())
+    print(html_page)
 
     red_parser_obj.feed(html_page)
     img_link = red_parser_obj.link
-    print("Trying to fetch ", img_link)
-    img_link = urlopen(img_link)
+    print("Trying to download ", img_link)
+    img_link = urlopen(Request(img_link, headers = custom_header))
 
     with open("todays_img.jpg", "wb") as img_file:
         img_file.write(img_link.read())
+    print("Image Downloaded successfully")
 
 
 if __name__ == "__main__":
