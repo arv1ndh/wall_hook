@@ -1,12 +1,17 @@
 import dbus
 import os
 
-def change_wall():
+def change_wall(image_file_name):
 
-    if not os.path.isfile("resized_img.jpg"):
+    if not os.path.isfile(image_file_name):
         print("Resized file not available")
         return
-    os.rename("resized_img.jpg", "final_wall_img.jpg")
+    old_file = list(filter(lambda x:x.startswith("final_"), [img_f for img_f in os.listdir(".")]))[0]
+    if len(old_file):
+        os.remove(old_file)
+        print("Removed old file ", old_file)
+    final_image_name = "final_" + image_file_name.split('_')[1]
+    os.rename(image_file_name, final_image_name)
 
     p_command = """
     var allDesktops = desktops();
@@ -14,12 +19,12 @@ def change_wall():
         d = allDesktops[i];
         d.wallpaperPlugin = "org.kde.image";
         d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");
-        d.writeConfig("Image", "file:///home/arvindh/my_git/wall_hook/final_wall_img.jpg")
+        d.writeConfig("Image", "file:///home/arvindh/my_git/wall_hook/%s")
     }
     """
     bus = dbus.SessionBus()
     plasma = dbus.Interface(bus.get_object('org.kde.plasmashell','/PlasmaShell'), dbus_interface='org.kde.PlasmaShell')
-    plasma.evaluateScript(p_command)
+    plasma.evaluateScript(p_command % final_image_name)
 
 #if __name__ == "__main__":
 #    main()

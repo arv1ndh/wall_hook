@@ -46,11 +46,13 @@ def red_crawler():
     red_parser_obj.feed(html_page)
     img_link = red_parser_obj.link
     print("Trying to download ", img_link)
-    img_link = urlopen(Request(img_link, headers = custom_header))
+    img_link_obj = urlopen(Request(img_link, headers = custom_header))
 
-    with open("todays_img.jpg", "wb") as img_file:
-        img_file.write(img_link.read())
+    img_name = "todays_" + img_link.split('/')[-1]
+    with open(img_name, "wb") as img_file:
+        img_file.write(img_link_obj.read())
     print("Image Downloaded successfully")
+    return img_name
 
 
 #if __name__ == "__main__":
