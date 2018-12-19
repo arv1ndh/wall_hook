@@ -6,7 +6,7 @@ def image_resizer(image_name):
         print("Image not present")
         return
     print("Opening todays_img.jpg")
-    img_obj = Image.open("todays_img.jpg", "r")
+    img_obj = Image.open(image_name, "r")
     img_obj = img_obj.resize((1920,1080))
     resize_img_name = "resized_" + image_name.split('_')[1]
     img_obj.save(resize_img_name)

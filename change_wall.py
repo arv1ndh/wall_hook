@@ -6,7 +6,11 @@ def change_wall(image_file_name):
     if not os.path.isfile(image_file_name):
         print("Resized file not available")
         return
-    old_file = list(filter(lambda x:x.startswith("final_"), [img_f for img_f in os.listdir(".")]))[0]
+    old_file = ""
+    try:
+        old_file = list(filter(lambda x:x.startswith("final_"), [img_f for img_f in os.listdir(".")]))[0]
+    except IndexError:
+        pass
     if len(old_file):
         os.remove(old_file)
         print("Removed old file ", old_file)
@@ -24,7 +28,11 @@ def change_wall(image_file_name):
     """
     bus = dbus.SessionBus()
     plasma = dbus.Interface(bus.get_object('org.kde.plasmashell','/PlasmaShell'), dbus_interface='org.kde.PlasmaShell')
+    #print(p_command % final_image_name)
     plasma.evaluateScript(p_command % final_image_name)
 
+#def main():
+#    change_wall("r_sxf5.jpg")
+#
 #if __name__ == "__main__":
 #    main()
