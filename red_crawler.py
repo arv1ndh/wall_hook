@@ -26,6 +26,9 @@ class RedditEpParser(HTMLParser):
                 self.link = t_link
                 self.img_flag = 1
 
+    def handle_endtag(self, tag):
+        if 'html' == tag:
+            print("END")
     def handle_data(self, data):
         global REQ_IMG_H, REQ_IMG_W
         if self.link != "" and self.img_flag == 0:
@@ -60,12 +63,11 @@ class ImgParser(HTMLParser):
                 self.link = t_dict["href"]
                 self.img_rend_flag = 0
 
-
 def red_crawler():
     red_url = "https://www.reddit.com"
     categ = "/r/EarthPorn"
 
-    print("Trying to fetch ", red_url+categ)
+    print(f"Trying to fetch {red_url+categ}")
     url_obj = urlopen(Request(red_url+categ, headers=custom_header))
     html_page = str(url_obj.read())
 
@@ -74,6 +76,8 @@ def red_crawler():
     post_link = red_parser_obj.final_link
     if len(post_link) == 0:
         print("No high res image found, exiting")
+        with open("test.html",'w') as out_f:
+            out_f.write(html_page)
         import sys
         sys.exit()
     print("Obtained the post link ", post_link)
@@ -90,7 +94,7 @@ def red_crawler():
     print(img_link)
     img_link_obj = urlopen(Request(img_link, headers = custom_header))
 
-    img_name = "todays_" + img_link.split('/')[-1]
+    img_name = "todays_image.jpg"# + img_link.split('/')[-1]
     with open(img_name, "wb") as img_file:
         img_file.write(img_link_obj.read())
     print("Image Downloaded successfully")

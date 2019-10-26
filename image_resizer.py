@@ -13,8 +13,9 @@ def image_resizer(image_name):
     print("Image resized successfully")
     os.remove(image_name)
     return resize_img_name
-    
 
-
+#def main():
+#    image_resizer("todays_48953734416.jpg")
+#    
 #if __name__ == "__main__":
 #    main()
