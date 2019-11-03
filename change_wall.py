@@ -1,4 +1,5 @@
 import dbus
+import random
 import os
 
 def change_wall(image_file_name):
@@ -14,7 +15,7 @@ def change_wall(image_file_name):
     if len(old_file):
         os.remove(old_file)
         print("Removed old file ", old_file)
-    final_image_name = "final_" + image_file_name.split('_')[1]
+    final_image_name = "final_" + str(random.randint(0,100)) + ".jpg"#image_file_name.split('_')[1]
     os.rename(image_file_name, final_image_name)
 
     p_command = """
